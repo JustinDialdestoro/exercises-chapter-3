@@ -104,3 +104,13 @@ class Polynomial:
             total += self.coefficients[i]*(other**i)
         
         return total
+
+    def dx(self):
+        derivative = tuple(a*b for a, b in enumerate(self.coefficients))
+        if self.degree() == 0:
+            return Polynomial(derivative)
+        else:
+            return Polynomial(derivative[1:len(derivative)])
+
+def derivative(polynomial):
+    return polynomial.dx()
