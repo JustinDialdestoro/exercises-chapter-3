@@ -47,7 +47,10 @@ class Polynomial:
 
         else:
             return NotImplemented
-        
+
+    def __radd__(self, other):
+        return self + other
+
     def __sub__(self, other):
 
         if isinstance(other, Polynomial):
@@ -70,5 +73,34 @@ class Polynomial:
     def __rsub__(self, other):
         return Polynomial(tuple(-c for c in self.coefficients)) + other
 
-    def __radd__(self, other):
-        return self + other
+    def __mul__(self, other):
+        if isinstance(other, Polynomial):
+            coefs = Polynomial(tuple(self.coefficients[0]*a for a in other.coefficients))
+            zeros = (0,)
+            for i in range(self.degree()):
+                coefs += Polynomial(zeros + tuple(self.coefficients[i+1]*a for a in other.coefficients))
+                zeros += (0,)
+            return coefs
+
+        elif isinstance(other, Number):
+            return Polynomial(tuple(other*a for a in self.coefficients))
+
+        else:
+            return NotImplemented
+    
+    def __rmul__(self, other):
+        return self*other
+    
+    def __pow__(self, other):
+        exp = 1
+        for i in range(other):
+            exp = exp*self
+        
+        return exp
+
+    def __call__(self, other):
+        total = 0
+        for i in range(self.degree()+1):
+            total += self.coefficients[i]*(other**i)
+        
+        return total
