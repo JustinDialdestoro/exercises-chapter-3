@@ -47,6 +47,28 @@ class Polynomial:
 
         else:
             return NotImplemented
+        
+    def __sub__(self, other):
+
+        if isinstance(other, Polynomial):
+            common = min(self.degree(), other.degree()) + 1
+            coefs = tuple(a - b for a, b in zip(self.coefficients,
+                                                other.coefficients))
+            if self.degree() < other.degree():
+                coefs += tuple(-c for c in other.coefficients[common:])
+            else:
+                coefs += self.coefficients[common:]
+            return Polynomial(coefs)
+
+        elif isinstance(other, Number):
+            return Polynomial((self.coefficients[0] - other,)
+                              + self.coefficients[1:])
+
+        else:
+            return NotImplemented
+    
+    def __rsub__(self, other):
+        return Polynomial(tuple(-c for c in self.coefficients)) + other
 
     def __radd__(self, other):
         return self + other
